@@ -5,3 +5,4 @@ FROM nginx:alpine
 COPY index.html /usr/share/nginx/html/index.html
 
 # The Nginx image automatically starts the server on port 80
+EXPOSE 80
