@@ -52,6 +52,16 @@ pipeline {
                 }
             }
         }
+        stage('Configure kubectl') {
+        steps {
+            sh '''
+            aws eks update-kubeconfig \
+                --region us-east-1 \
+                --name bookstore-eks
+            '''
+            }
+        }
+
         stage('Deploy to EKS') {
       steps {
         sh '''
