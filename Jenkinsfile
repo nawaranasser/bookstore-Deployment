@@ -65,9 +65,9 @@ pipeline {
         stage('Deploy to EKS') {
       steps {
         sh '''
-          kubectl apply -f k8s/namespace.yaml
-          kubectl apply -f k8s/frontend-deployment.yaml
-          kubectl apply -f k8s/backend-deployment.yaml
+          kubectl apply -f k8s/namespace.yml
+          kubectl apply -f k8s/frontend-deploy.yml
+          kubectl apply -f k8s/backend-deploy.yml
         '''
       }
     }
