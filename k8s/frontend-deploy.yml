@@ -11,6 +11,9 @@ spec:
     metadata:
       labels:
         app: frontend
+    spec:
+      imagePullSecrets:
+        - name: nexus-secret        
       containers:
         - name: frontend
           image: 13.222.210.181:8083/bookstore-frontend:1.0
