@@ -1,21 +1,65 @@
 pipeline {
-  agent any
+    agent any
 
-  environment {
-          NEXUS_CREDENTIALS = credentials('nexus-credentials')
-          NEXUS_URL = "http://3.82.209.224:8083"  // replace with your Nexus server URL
-      }
+    environment {
+        NEXUS_REGISTRY = "13.222.210.181:8083"
+        FRONTEND_IMAGE = "bookstore-frontend"
+        BACKEND_IMAGE  = "bookstore-backend"
+        IMAGE_TAG = "1.0"
+    }
 
-  stages {
-        stage('Test Nexus Connection') {
+    stages {
+
+        stage('Build Frontend Image') {
             steps {
-                script {
-                    sh """
-                        echo $NEXUS_CREDENTIALS_PSW | docker login $NEXUS_URL -u $NEXUS_CREDENTIALS_USR --password-stdin
-                    """
+                dir('bookstore-frontend') {
+                    sh 'docker build -t $FRONTEND_IMAGE:$IMAGE_TAG .'
                 }
             }
         }
-    }
-}
 
+        stage('Build Backend Image') {
+            steps {
+                dir('bookstore-backend') {
+                    sh 'docker build -t $BACKEND_IMAGE:$IMAGE_TAG .'
+                }
+            }
+        }
+
+        stage('Tag Images') {
+            steps {
+                sh '''
+                  docker tag $FRONTEND_IMAGE:$IMAGE_TAG $NEXUS_REGISTRY/$FRONTEND_IMAGE:$IMAGE_TAG
+                  docker tag $BACKEND_IMAGE:$IMAGE_TAG  $NEXUS_REGISTRY/$BACKEND_IMAGE:$IMAGE_TAG
+                '''
+            }
+        }
+
+        stage('Push Images to Nexus') {
+            steps {
+                withCredentials([
+                  usernamePassword(
+                    credentialsId: 'nexus-credentials',
+                    usernameVariable: 'NEXUS_USER',
+                    passwordVariable: 'NEXUS_PASS'
+                  )
+                ]) {
+                    sh '''
+                      echo "$NEXUS_PASS" | docker login $NEXUS_REGISTRY -u "$NEXUS_USER" --password-stdin
+                      docker push $NEXUS_REGISTRY/$FRONTEND_IMAGE:$IMAGE_TAG
+                      docker push $NEXUS_REGISTRY/$BACKEND_IMAGE:$IMAGE_TAG
+                    '''
+                }
+            }
+        }
+        stage('Deploy to EKS') {
+      steps {
+        sh '''
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/frontend-deployment.yaml
+          kubectl apply -f k8s/backend-deployment.yaml
+        '''
+      }
+    }
+  }
+}
