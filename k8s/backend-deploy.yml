@@ -7,7 +7,7 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: backend
+      app: bookstore-backend
   template:
     metadata:
       labels:
