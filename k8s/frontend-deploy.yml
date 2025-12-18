@@ -2,12 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: bookstore
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: bookstore-frontend
   template:
     metadata:
       labels:
