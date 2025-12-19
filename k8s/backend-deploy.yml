@@ -17,6 +17,6 @@ spec:
         - name: nexus-secret
       containers:
         - name: backend
-          image: 13.222.210.181:8083/bookstore-backend:1.0
+          image: 18.212.65.110:8083/bookstore-backend:1.0
           ports:
             - containerPort: 5000
