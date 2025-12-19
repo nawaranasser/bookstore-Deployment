@@ -17,5 +17,8 @@ spec:
       containers:
         - name: frontend
           image: 13.222.210.181:8083/bookstore-frontend:1.0
+          env:
+            - name: BACKEND_URL
+              value: "http://bookstore-backend:5000"
           ports:
             - containerPort: 80
