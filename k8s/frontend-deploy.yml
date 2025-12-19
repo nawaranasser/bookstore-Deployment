@@ -16,6 +16,6 @@ spec:
         - name: nexus-secret        
       containers:
         - name: frontend
-          image: 13.222.210.181:8083/bookstore-frontend:1.0
+          image: nginx
           ports:
             - containerPort: 80
