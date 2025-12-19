@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NEXUS_REGISTRY = "13.222.210.181:8083"
+        NEXUS_REGISTRY = "18.212.65.110:8083"
         FRONTEND_IMAGE = "bookstore-frontend"
         BACKEND_IMAGE  = "bookstore-backend"
         IMAGE_TAG = "1.0"
