@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookstore</title>
+</head>
+<body>
+  <h1>Hello from Our Bookstore Frontend </h1>
+  <p id="backend"></p>
+
+  <script>
+    fetch("http://bookstore-backend:5000/api/hello")
+      .then(res => res.text())
+      .then(data => document.getElementById("backend").innerText = data)
+      .catch(err => document.getElementById("backend").innerText = "Backend not reachable");
+  </script>
+</body>
+</html>
