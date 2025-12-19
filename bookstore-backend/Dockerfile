@@ -1,20 +1,20 @@
-# Use an official Python runtime as a base image
-FROM python:3.9-slim
+# Use an official Node.js runtime as a parent image
+FROM node:18-alpine
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements file first (for better Docker caching)
-COPY requirements.txt .
+# Copy package.json and package-lock.json to leverage Docker cache
+COPY package*.json ./
 
-# Install the Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install app dependencies
+RUN npm install
 
-# Copy the rest of the application code
+# Bundle app source
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 5000
+# Your app binds to port 3001 (matching Kubernetes manifest)
+EXPOSE 3001
 
-# Define the command to run the application
-CMD ["python", "app.py"]
+# Define the command to run your app
+CMD [ "npm", "start" ]
